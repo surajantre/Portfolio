@@ -8,8 +8,8 @@ import { identity, heroKeywords, summary } from "@/lib/content";
 import { MagneticButton } from "@/components/ui/primitives";
 import { scrollToSection } from "@/lib/utils";
 
-const HeroScene = dynamic(
-  () => import("@/components/three/HeroScene").then((m) => m.HeroScene),
+const ParticleField = dynamic(
+  () => import("@/components/three/ParticleField").then((m) => m.ParticleField),
   { ssr: false }
 );
 
@@ -51,7 +51,7 @@ export function Hero() {
       className="relative flex min-h-[100svh] items-center overflow-hidden pt-28"
     >
       <div className="absolute inset-0 -z-20 bg-aurora" />
-      <HeroScene className="absolute inset-0 -z-10 h-full w-full" />
+      <ParticleField className="absolute inset-0 -z-10 h-full w-full opacity-70" />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-transparent to-background" />
 
       <div className="section-container">
@@ -150,8 +150,40 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* 3D Scene is in the background, visible in this right column */}
-          <div className="hidden lg:block pointer-events-none" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="relative mx-auto hidden aspect-square w-full max-w-md lg:block"
+          >
+            <div className="absolute inset-6 animate-float rounded-[2.5rem] bg-gradient-to-br from-accent/20 to-accent-2/20 blur-2xl" />
+            <div className="glass relative flex h-full w-full flex-col justify-between rounded-[2.5rem] p-8">
+              <div className="flex items-center justify-between">
+                <Sparkles className="text-accent" size={20} />
+                <span className="font-mono text-xs text-muted">~/suraj-antre</span>
+              </div>
+              <div className="space-y-3 font-mono text-sm">
+                <p className="text-muted">$ whoami</p>
+                <p className="text-foreground">senior_fullstack_python_dev</p>
+                <p className="text-muted">$ stack --core</p>
+                <p className="text-accent">FastAPI · Django · React · Next.js</p>
+                <p className="text-muted">$ deploy --status</p>
+                <p className="text-emerald-400">✓ 100+ users in production</p>
+              </div>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                {[
+                  ["3+", "Years exp."],
+                  ["9+", "Projects"],
+                  ["39+", "Repos"],
+                ].map(([n, l]) => (
+                  <div key={l} className="rounded-xl bg-surface-2 py-3">
+                    <div className="font-display text-lg font-bold text-foreground">{n}</div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted">{l}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
