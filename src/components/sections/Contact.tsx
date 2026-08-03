@@ -8,29 +8,33 @@ import { SectionHeading, MagneticButton, GlowCard } from "@/components/ui/primit
 import { Reveal } from "@/components/ui/Reveal";
 
 export function Contact() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [values, setValues] = useState({ name: "", email: "", message: "" });
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setStatus("sending");
 
-    // Frontend-only submission: opens the visitor's mail client with the
-    // message pre-filled and addressed to Suraj. No backend, no data stored.
-    // To wire this to a real inbox without opening the mail client, swap
-    // this handler for a POST to a Formspree-style endpoint, e.g.:
-    //
-    //   await fetch("https://formspree.io/f/your-form-id", {
-    //     method: "POST",
-    //     headers: { Accept: "application/json" },
-    //     body: new FormData(e.currentTarget),
-    //   });
-    const subject = encodeURIComponent(`Portfolio inquiry from ${values.name || "a visitor"}`);
-    const body = encodeURIComponent(
-      `${values.message}\n\n— ${values.name} (${values.email})`
-    );
-    window.location.href = `mailto:${identity.emailPrimary}?subject=${subject}&body=${body}`;
-    setStatus("sent");
-    setTimeout(() => setStatus("idle"), 4000);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        setStatus("sent");
+        setValues({ name: "", email: "", message: "" });
+        setTimeout(() => setStatus("idle"), 4000);
+      } else {
+        setStatus("error");
+        setTimeout(() => setStatus("idle"), 4000);
+      }
+    } catch (error) {
+      console.error(error);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 4000);
+    }
   }
 
   return (
@@ -104,7 +108,7 @@ export function Contact() {
 
                 <div className="flex items-center gap-4">
                   <MagneticButton as="button" type="submit" variant="primary">
-                    <Send size={15} /> Send Message
+                    <Send size={15} /> {status === "sending" ? "Sending..." : "Send Message"}
                   </MagneticButton>
                   {status === "sent" && (
                     <motion.span
@@ -112,7 +116,16 @@ export function Contact() {
                       animate={{ opacity: 1, x: 0 }}
                       className="inline-flex items-center gap-1.5 text-sm text-emerald-400"
                     >
-                      <CheckCircle2 size={16} /> Opening your mail client…
+                      <CheckCircle2 size={16} /> Message sent successfully!
+                    </motion.span>
+                  )}
+                  {status === "error" && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="inline-flex items-center gap-1.5 text-sm text-red-400"
+                    >
+                      Failed to send message. Please try again.
                     </motion.span>
                   )}
                 </div>
