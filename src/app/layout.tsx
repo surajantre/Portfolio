@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { PageTransition } from "@/components/layout/PageTransition";
+import { Preloader } from "@/components/layout/Preloader";
 import { identity, siteMeta } from "@/lib/content";
 
 const display = Playfair_Display({
@@ -111,7 +114,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           >
             Skip to content
           </a>
-          {children}
+          <Preloader />
+          <SmoothScroll>
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </SmoothScroll>
         </ThemeProvider>
       </body>
     </html>

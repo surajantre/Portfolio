@@ -21,7 +21,7 @@ export function About() {
             <GlowCard className="h-full">
               <p className="text-base leading-relaxed text-muted sm:text-lg">{summary}</p>
 
-              <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <InfoItem icon={<MapPin size={16} />} label="Based in" value={identity.location} />
                 <InfoItem
                   icon={<Languages size={16} />}
@@ -67,7 +67,7 @@ export function About() {
             </GlowCard>
           </Reveal>
 
-          <div className="lg:col-span-2">
+          <div className="mt-12 lg:col-span-2 lg:mt-0">
             <Reveal delay={0.15}>
               <h3 className="mb-4 font-display text-lg font-semibold text-foreground">
                 Education

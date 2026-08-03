@@ -80,7 +80,8 @@ export function MagneticButton({
     const rect = el.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    setPos({ x: x * 0.25, y: y * 0.25 });
+    // Reduce magnetic pull slightly for a heavier, more premium feel
+    setPos({ x: x * 0.15, y: y * 0.15 });
   }
 
   function handleMouseLeave() {
@@ -111,7 +112,8 @@ export function MagneticButton({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       animate={{ x: pos.x, y: pos.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 12, mass: 0.4 }}
+      // Use a stiffer spring for quicker, more decisive magnetic snap
+      transition={{ type: "spring", stiffness: 200, damping: 15, mass: 0.2 }}
       className="inline-block"
     >
       {as === "a" ? (
@@ -158,7 +160,7 @@ export function GlowCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setGlow((g) => ({ ...g, active: false }))}
       className={cn(
-        "card-hover glass relative overflow-hidden rounded-2xl p-6",
+        "card-hover glass relative overflow-hidden rounded-3xl p-8",
         className
       )}
       style={{

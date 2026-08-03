@@ -26,6 +26,15 @@ const config: Config = {
         sans: ["var(--font-sans)", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
       },
+      fontSize: {
+        "4xl": ["2.25rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
+        "5xl": ["3rem", { lineHeight: "1.1", letterSpacing: "-0.03em" }],
+        "6xl": ["3.75rem", { lineHeight: "1.05", letterSpacing: "-0.04em" }],
+        "7xl": ["4.5rem", { lineHeight: "1.05", letterSpacing: "-0.04em" }],
+      },
+      transitionTimingFunction: {
+        apple: "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
       backgroundImage: {
         "aurora": "radial-gradient(60% 60% at 20% 20%, hsl(var(--accent) / 0.25), transparent 60%), radial-gradient(50% 50% at 80% 30%, hsl(var(--accent-2) / 0.22), transparent 60%), radial-gradient(70% 70% at 50% 90%, hsl(var(--accent) / 0.12), transparent 60%)",
         "grain": "url('/images/noise.svg')",

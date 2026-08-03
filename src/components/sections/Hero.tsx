@@ -6,11 +6,15 @@ import { motion } from "framer-motion";
 import { ArrowDown, Download, Mail, Github, Linkedin, Sparkles } from "lucide-react";
 import { identity, heroKeywords, summary } from "@/lib/content";
 import { MagneticButton } from "@/components/ui/primitives";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { scrollToSection } from "@/lib/utils";
 
-const ParticleField = dynamic(
-  () => import("@/components/three/ParticleField").then((m) => m.ParticleField),
-  { ssr: false }
+const HeroScene = dynamic(
+  () => import("@/components/three/HeroScene").then((m) => m.HeroScene),
+  { 
+    ssr: false,
+    loading: () => <div className="absolute inset-0 -z-10 h-full w-full bg-transparent" />
+  }
 );
 
 function TypingKeyword() {
@@ -51,7 +55,7 @@ export function Hero() {
       className="relative flex min-h-[100svh] items-center overflow-hidden pt-28"
     >
       <div className="absolute inset-0 -z-20 bg-aurora" />
-      <ParticleField className="absolute inset-0 -z-10 h-full w-full opacity-70" />
+      <HeroScene className="absolute inset-0 -z-10 h-full w-full opacity-90" />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-transparent to-background" />
 
       <div className="section-container">
@@ -154,35 +158,53 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="relative mx-auto hidden aspect-square w-full max-w-md lg:block"
+            className="relative mx-auto mt-12 block aspect-[4/5] w-[90%] max-w-[340px] sm:max-w-md lg:mt-0 lg:w-full"
           >
-            <div className="absolute inset-6 animate-float rounded-[2.5rem] bg-gradient-to-br from-accent/20 to-accent-2/20 blur-2xl" />
-            <div className="glass relative flex h-full w-full flex-col justify-between rounded-[2.5rem] p-8">
-              <div className="flex items-center justify-between">
-                <Sparkles className="text-accent" size={20} />
-                <span className="font-mono text-xs text-muted">~/suraj-antre</span>
+            <div className="absolute inset-6 animate-float rounded-[2.5rem] bg-gradient-to-br from-accent/40 to-accent-2/40 blur-3xl opacity-60" />
+            
+            <TiltCard className="h-full w-full">
+              <div className="glass relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[2.5rem] p-6 sm:p-8 group border border-accent/20 hover:border-accent/50 shadow-2xl transition-all duration-500 hover:shadow-accent/20">
+                
+                {/* 3D Cutout Image Background */}
+                <motion.img 
+                  src="/Suraj_Photo-removebg-preview.png"
+                  alt="Suraj Antre"
+                  className="absolute -right-4 bottom-12 sm:bottom-20 z-0 h-[85%] sm:h-[95%] object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-translate-y-2 group-hover:-translate-x-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8, duration: 1 }}
+                />
+                
+                {/* Gradients for text readability over the image */}
+                <div className="absolute inset-0 z-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent" />
+                <div className="absolute inset-0 z-0 bg-gradient-to-t from-background/95 via-transparent to-transparent" />
+                
+                <div className="relative z-10 flex items-center justify-between">
+                  <Sparkles className="text-accent animate-pulse" size={20} />
+                  <span className="font-mono text-xs font-medium text-accent/80">~/suraj-antre</span>
+                </div>
+                
+                <div className="relative z-10 mt-auto mb-6 sm:mb-8 space-y-2 sm:space-y-3 font-mono text-xs sm:text-sm">
+                  <p className="text-muted">$ whoami</p>
+                  <p className="text-foreground font-semibold">senior_fullstack_python_dev</p>
+                  <p className="text-muted">$ stack --core</p>
+                  <p className="text-accent font-medium">FastAPI · Django · React · Next.js</p>
+                </div>
+                
+                <div className="relative z-10 grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                  {[
+                    ["3+", "Years exp."],
+                    ["9+", "Projects"],
+                    ["39+", "Repos"],
+                  ].map(([n, l]) => (
+                    <div key={l} className="rounded-xl bg-surface-2/90 backdrop-blur-md py-2 sm:py-3 border border-border/50 shadow-[0_4px_12px_rgba(0,0,0,0.1)] group-hover:border-accent/40 transition-colors">
+                      <div className="font-display text-base sm:text-lg font-bold text-foreground">{n}</div>
+                      <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted">{l}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-3 font-mono text-sm">
-                <p className="text-muted">$ whoami</p>
-                <p className="text-foreground">senior_fullstack_python_dev</p>
-                <p className="text-muted">$ stack --core</p>
-                <p className="text-accent">FastAPI · Django · React · Next.js</p>
-                <p className="text-muted">$ deploy --status</p>
-                <p className="text-emerald-400">✓ 100+ users in production</p>
-              </div>
-              <div className="grid grid-cols-3 gap-3 text-center">
-                {[
-                  ["3+", "Years exp."],
-                  ["9+", "Projects"],
-                  ["39+", "Repos"],
-                ].map(([n, l]) => (
-                  <div key={l} className="rounded-xl bg-surface-2 py-3">
-                    <div className="font-display text-lg font-bold text-foreground">{n}</div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted">{l}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            </TiltCard>
           </motion.div>
         </div>
       </div>
