@@ -8,7 +8,7 @@ function Counter({ value, suffix, prefix, label }: { value: number; suffix: stri
   const { ref, value: animated } = useCounter(value);
 
   return (
-    <div ref={ref} className="glass card-hover rounded-2xl p-6 text-center sm:p-8">
+    <div ref={ref} className="glass card-hover rounded-2xl p-4 sm:p-6 lg:p-8 text-center">
       <div className="font-display text-3xl font-bold text-gradient sm:text-4xl">
         {prefix}
         {animated.toLocaleString()}
@@ -29,7 +29,7 @@ export function Achievements() {
           title="Numbers that tell part of the story."
           align="center"
         />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {achievements.map((a) => (
             <Counter
               key={a.id}

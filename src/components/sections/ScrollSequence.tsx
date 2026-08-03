@@ -43,19 +43,19 @@ function ScrollModel({ isModalOpen }: { isModalOpen: boolean }) {
 
     // 1. Position X: Starts right (About), moves center (Transition), stays center (Projects)
     let targetX = 0;
-    if (p < 0.3) targetX = startX;
-    else if (p < 0.5) targetX = THREE.MathUtils.lerp(startX, 0, (p - 0.3) / 0.2);
+    if (p < 0.25) targetX = startX;
+    else if (p < 0.4) targetX = THREE.MathUtils.lerp(startX, 0, (p - 0.25) / 0.15);
     else targetX = 0; // Center for Projects
     
     // 2. Position Y (On mobile, push it up during About so it doesn't overlap text)
     let targetY = 0;
-    if (isMobile && p < 0.3) targetY = startY;
-    else if (isMobile && p < 0.5) targetY = THREE.MathUtils.lerp(startY, 0, (p - 0.3) / 0.2);
+    if (isMobile && p < 0.25) targetY = startY;
+    else if (isMobile && p < 0.4) targetY = THREE.MathUtils.lerp(startY, 0, (p - 0.25) / 0.15);
     
     // 3. Position Z (Depth / Scale)
     let targetZ = 0;
-    if (p < 0.3) targetZ = 0;
-    else if (p < 0.5) targetZ = THREE.MathUtils.lerp(0, -3, (p - 0.3) / 0.2);
+    if (p < 0.25) targetZ = 0;
+    else if (p < 0.4) targetZ = THREE.MathUtils.lerp(0, -3, (p - 0.25) / 0.15);
     else targetZ = -3;
 
     // 4. Rotation
@@ -71,7 +71,7 @@ function ScrollModel({ isModalOpen }: { isModalOpen: boolean }) {
     meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, targetRotY, 4, delta);
     
     // 5. Material property shifts (e.g. gets more distorted/transparent during projects)
-    const targetRoughness = p > 0.4 ? 0.4 : 0.1;
+    const targetRoughness = p > 0.3 ? 0.4 : 0.1;
     materialRef.current.roughness = THREE.MathUtils.damp(materialRef.current.roughness, targetRoughness, 2, delta);
   });
 
@@ -125,26 +125,26 @@ export function ScrollSequence() {
   // Apple-style cubic-bezier easing
   const easing = [0.16, 1, 0.3, 1];
 
-  // --- About Section Transforms (0.0 to 0.4) ---
-  const aboutOpacity = useTransform(scrollYProgress, [0, 0.05, 0.3, 0.4], [0, 1, 1, 0]);
-  const aboutY = useTransform(scrollYProgress, [0, 0.05, 0.3, 0.4], [50, 0, 0, -100]);
-  const aboutPointerEvents = useTransform(scrollYProgress, (p) => (p > 0.4 ? "none" : "auto"));
+  // --- About Section Transforms (0.0 to 0.3) ---
+  const aboutOpacity = useTransform(scrollYProgress, [0, 0.05, 0.2, 0.3], [0, 1, 1, 0]);
+  const aboutY = useTransform(scrollYProgress, [0, 0.05, 0.2, 0.3], [50, 0, 0, -100]);
+  const aboutPointerEvents = useTransform(scrollYProgress, (p) => (p > 0.3 ? "none" : "auto"));
 
-  // --- Projects Header Transforms (0.4 to 0.5) ---
-  const projectsHeaderOpacity = useTransform(scrollYProgress, [0.4, 0.45, 0.95, 1], [0, 1, 1, 0]);
-  const projectsHeaderY = useTransform(scrollYProgress, [0.4, 0.45, 0.95, 1], [50, 0, 0, -50]);
+  // --- Projects Header Transforms (0.3 to 0.4) ---
+  const projectsHeaderOpacity = useTransform(scrollYProgress, [0.3, 0.35, 0.95, 1], [0, 1, 1, 0]);
+  const projectsHeaderY = useTransform(scrollYProgress, [0.3, 0.35, 0.95, 1], [50, 0, 0, -50]);
 
   // --- Projects Modal State ---
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   
   const setHovering3D = useAppStore((state) => state.setHovering3D);
   const numProjects = projects.length;
-  const projectScrollStart = 0.5;
+  const projectScrollStart = 0.4;
   const projectScrollEnd = 0.95;
   const scrollPerProject = (projectScrollEnd - projectScrollStart) / numProjects;
 
   return (
-    <section ref={containerRef} className="relative h-[800vh] bg-background">
+    <section ref={containerRef} className="relative h-[1300vh] bg-background">
       {/* Sticky Viewport Container */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         
@@ -167,16 +167,16 @@ export function ScrollSequence() {
           style={{ opacity: aboutOpacity, y: aboutY, pointerEvents: aboutPointerEvents as any }}
           className="absolute inset-0 z-10 flex flex-col pt-24 pb-8"
         >
-          <div className="section-container w-full flex-1 overflow-y-auto no-scrollbar flex flex-col justify-center">
-            <div className="max-w-xl md:max-w-2xl mt-[35vh] md:mt-0 pb-12">
+          <div className="section-container w-full flex-1 flex flex-col justify-center">
+            <div className="max-w-xl md:max-w-2xl py-12 mx-auto md:mx-0">
               <SectionHeading
                 eyebrow="About"
                 title="Engineering systems that scale, quietly and reliably."
               />
               
-              <GlowCard className="mt-8 p-6 bg-background/40 backdrop-blur-xl border-border/50">
+              <GlowCard className="mt-4 sm:mt-8 p-4 sm:p-6 bg-background/40 backdrop-blur-xl border-border/50 max-h-[80vh] overflow-y-auto">
                 <p className="text-base leading-relaxed text-muted sm:text-lg">{summary}</p>
-                <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                <div className="mt-6 sm:mt-8 grid grid-cols-2 md:grid-cols-3 gap-4">
                   <InfoItem icon={<MapPin size={16} />} label="Based in" value={identity.location} />
                   <InfoItem icon={<Languages size={16} />} label="Languages" value={spokenLanguages.map((l) => l.language).join(", ")} />
                   <InfoItem icon={<Zap size={16} />} label="Availability" value={identity.availability} />
@@ -205,7 +205,7 @@ export function ScrollSequence() {
             {/* Projects Header */}
             <motion.div
               style={{ opacity: projectsHeaderOpacity, y: projectsHeaderY }}
-              className="absolute top-12 md:top-28 left-0 right-0 pointer-events-auto z-30"
+              className="absolute top-4 sm:top-12 md:top-28 left-0 right-0 pointer-events-auto z-30"
             >
               <SectionHeading
                 eyebrow="Projects"
@@ -215,7 +215,7 @@ export function ScrollSequence() {
             </motion.div>
 
             {/* Project Cards (3D Entering Effect) */}
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-start pt-32 sm:pt-40 md:pt-0 md:items-center justify-center">
               {projects.map((project, index) => {
                 const start = projectScrollStart + index * scrollPerProject;
                 const peak = start + scrollPerProject / 2;
@@ -251,17 +251,17 @@ export function ScrollSequence() {
                   <motion.div
                     key={project.id}
                     style={{ opacity, scale, y, pointerEvents: pointerEvents as any }}
-                    className="absolute max-w-xl w-full px-4"
+                    className="absolute max-w-xl w-[90%] sm:w-full sm:px-4"
                   >
                     <TiltCard 
                       layoutId={`project-${project.id}`} 
                       onClick={() => setSelectedProject(project)}
                     >
                       <GlowCard 
-                        className="group flex flex-col overflow-hidden rounded-3xl text-left bg-background/60 backdrop-blur-2xl border-border/50 shadow-2xl cursor-pointer hover:border-accent/50 transition-colors"
+                        className="group flex flex-col overflow-y-auto no-scrollbar max-h-[75vh] rounded-3xl text-left bg-background/60 backdrop-blur-2xl border-border/50 shadow-2xl cursor-pointer hover:border-accent/50 transition-colors"
                       >
                         <div
-                          className="relative flex h-48 items-end p-6"
+                          className="relative flex h-32 sm:h-48 shrink-0 items-end p-4 sm:p-6"
                           style={{ background: `linear-gradient(135deg, ${project.gradient[0]}40, ${project.gradient[1]}40)` }}
                         >
                           <div
@@ -277,15 +277,17 @@ export function ScrollSequence() {
                             </span>
                           )}
                         </div>
-                        <div className="flex flex-1 flex-col p-6">
-                          <span className="text-xs font-bold uppercase tracking-widest text-accent">
-                            {project.category}
-                          </span>
-                          <h3 className="mt-3 font-display text-2xl font-bold text-foreground">
-                            {project.title}
-                          </h3>
-                          <p className="mt-3 line-clamp-2 text-sm text-muted/90 leading-relaxed">{project.blurb}</p>
-                          <div className="mt-6 flex flex-wrap gap-2">
+                        <div className="flex flex-1 flex-col p-4 sm:p-6 justify-between">
+                          <div>
+                            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-accent">
+                              {project.category}
+                            </span>
+                            <h3 className="mt-1 sm:mt-3 font-display text-xl sm:text-2xl font-bold text-foreground leading-tight">
+                              {project.title}
+                            </h3>
+                            <p className="mt-2 text-sm text-muted/90 leading-relaxed">{project.blurb}</p>
+                          </div>
+                          <div className="mt-4 flex flex-wrap gap-2">
                             {project.stack.slice(0, 4).map((t) => (
                               <Badge key={t} className="bg-surface-2/50 backdrop-blur-sm border-border/50">{t}</Badge>
                             ))}
@@ -386,7 +388,7 @@ function ProjectModal({ project, onClose, easing }: { project: Project | null; o
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-surface-2 px-5 py-3 text-sm font-bold text-foreground transition-all hover:bg-surface-2/80 hover:scale-[1.02]"
+                  className="inline-flex w-full sm:w-auto flex-1 items-center justify-center gap-2 rounded-xl bg-surface-2 px-5 py-3 text-sm font-bold text-foreground transition-all hover:bg-surface-2/80 hover:scale-[1.02]"
                 >
                   <Github size={16} /> Source Code
                 </a>
@@ -395,7 +397,7 @@ function ProjectModal({ project, onClose, easing }: { project: Project | null; o
                   target={project.liveUrl ? "_blank" : undefined}
                   rel="noopener noreferrer"
                   className={cn(
-                    "inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-2 px-5 py-3 text-sm font-bold text-white transition-all hover:scale-[1.02] shadow-lg shadow-accent/20",
+                    "inline-flex w-full sm:w-auto flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-2 px-5 py-3 text-sm font-bold text-white transition-all hover:scale-[1.02] shadow-lg shadow-accent/20",
                     !project.liveUrl && "opacity-50 cursor-not-allowed hover:scale-100 shadow-none"
                   )}
                 >

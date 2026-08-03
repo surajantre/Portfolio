@@ -60,7 +60,7 @@ export function Certificates() {
           </p>
         </Reveal>
 
-        <div className="mt-6 columns-2 gap-4 sm:columns-3 lg:columns-4 [&>*]:mb-4">
+        <div className="mt-6 columns-1 sm:columns-2 lg:columns-3 gap-4 [&>*]:mb-4">
           {certificateGallery.map((img, i) => (
             <motion.button
               key={img.id}

@@ -106,10 +106,12 @@ export function Contact() {
                   />
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <MagneticButton as="button" type="submit" variant="primary">
-                    <Send size={15} /> {status === "sending" ? "Sending..." : "Send Message"}
-                  </MagneticButton>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <div className="w-full sm:w-auto flex justify-center">
+                    <MagneticButton as="button" type="submit" variant="primary">
+                      <Send size={15} /> {status === "sending" ? "Sending..." : "Send Message"}
+                    </MagneticButton>
+                  </div>
                   {status === "sent" && (
                     <motion.span
                       initial={{ opacity: 0, x: -8 }}

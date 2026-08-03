@@ -52,15 +52,15 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[100svh] items-center overflow-hidden pt-28"
+      className="relative flex min-h-[100svh] flex-col overflow-x-hidden pt-28 pb-12"
     >
       <div className="absolute inset-0 -z-20 bg-aurora" />
       <HeroScene className="absolute inset-0 -z-10 h-full w-full opacity-90" />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-transparent to-background" />
 
-      <div className="section-container">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
-          <div>
+      <div className="section-container my-auto">
+        <div className="grid items-center gap-8 lg:gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             {identity.openToWork && (
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
@@ -107,30 +107,34 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-9 flex flex-wrap items-center gap-4"
+              className="mt-9 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
             >
-              <MagneticButton
-                as="a"
-                href={identity.resumeUrl}
-                variant="primary"
-                ariaLabel="Download resume PDF"
-              >
-                <Download size={16} /> Download Resume
-              </MagneticButton>
-              <MagneticButton
-                onClick={() => scrollToSection("contact")}
-                variant="secondary"
-                ariaLabel="Go to contact section"
-              >
-                <Mail size={16} /> Get in Touch
-              </MagneticButton>
+              <div className="w-full sm:w-auto flex justify-center">
+                <MagneticButton
+                  as="a"
+                  href={identity.resumeUrl}
+                  variant="primary"
+                  ariaLabel="Download resume PDF"
+                >
+                  <Download size={16} /> Download Resume
+                </MagneticButton>
+              </div>
+              <div className="w-full sm:w-auto flex justify-center">
+                <MagneticButton
+                  onClick={() => scrollToSection("contact")}
+                  variant="secondary"
+                  ariaLabel="Go to contact section"
+                >
+                  <Mail size={16} /> Get in Touch
+                </MagneticButton>
+              </div>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.55 }}
-              className="mt-10 flex items-center gap-4"
+              className="mt-10 flex items-center justify-center lg:justify-start gap-4"
             >
               <a
                 href={identity.github}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Float, useProgress } from "@react-three/drei";
 import * as THREE from "three";
 import { useAppStore } from "@/lib/store";
@@ -12,6 +12,16 @@ function CyberneticBrain() {
   const ringsRef = useRef<THREE.Group>(null);
   const { progress } = useProgress();
   const setLoaded = useAppStore((state) => state.setLoaded);
+  
+  const { viewport } = useThree();
+  // Use aspect ratio to reliably detect mobile screens (portrait mode)
+  const isMobile = viewport.aspect < 1;
+  
+  // Scale down significantly more on mobile so it doesn't overwhelm the text
+  const scale = isMobile ? 0.4 : 1;
+  
+  // Shift it up on mobile so it sits in the empty space rather than behind the text block
+  const positionY = isMobile ? 1.2 : 0;
 
   useEffect(() => {
     if (progress === 100) setLoaded(true);
@@ -91,38 +101,38 @@ function CyberneticBrain() {
       // Mouse follow parallax for the entire cybernetic brain
       groupRef.current.rotation.x = THREE.MathUtils.lerp(
         groupRef.current.rotation.x,
-        mousePosition.y * 0.4,
-        0.05
+        mousePosition.y * 0.2,
+        0.03
       );
       groupRef.current.rotation.y = THREE.MathUtils.lerp(
         groupRef.current.rotation.y,
-        mousePosition.x * 0.4,
-        0.05
+        mousePosition.x * 0.2,
+        0.03
       );
       
       // Gentle breathing/floating rotation
-      groupRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
+      groupRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.2) * 0.03;
     }
 
     if (ringsRef.current) {
-      // Rotate the robotic casing rings on different axes
+      // Rotate the robotic casing rings on different axes, much slower
       ringsRef.current.children.forEach((ring, index) => {
-        const speed = index % 2 === 0 ? 0.5 : -0.4;
+        const speed = index % 2 === 0 ? 0.15 : -0.12;
         ring.rotation.x += delta * speed * 0.5;
         ring.rotation.y += delta * speed;
       });
     }
 
     if (linesRef.current) {
-      // Pulse the synaptic connections opacity
+      // Pulse the synaptic connections opacity slower
       const material = linesRef.current.material as THREE.LineBasicMaterial;
-      material.opacity = 0.15 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
+      material.opacity = 0.15 + Math.sin(state.clock.elapsedTime * 1) * 0.1;
     }
   });
 
   return (
-    <group ref={groupRef}>
-      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={1}>
+    <group ref={groupRef} scale={scale} position={[0, positionY, 0]}>
+      <Float speed={0.8} rotationIntensity={0.1} floatIntensity={0.5}>
         
         {/* The Neural Web (Connections) */}
         <lineSegments ref={linesRef}>
