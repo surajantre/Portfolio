@@ -39,7 +39,7 @@ export function ParticleField({ className }: { className?: string }) {
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
     let particles: Particle[] = [];
-    let animationId: number;
+    let animationId: number = 0;
     let mouseX = 0;
     let mouseY = 0;
 

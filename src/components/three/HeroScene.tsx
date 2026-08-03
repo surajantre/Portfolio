@@ -129,9 +129,7 @@ function CyberneticBrain() {
           <bufferGeometry>
             <bufferAttribute
               attach="attributes-position"
-              count={linePositions.length / 3}
-              array={linePositions}
-              itemSize={3}
+              args={[linePositions, 3]}
             />
           </bufferGeometry>
           <lineBasicMaterial 
@@ -148,9 +146,7 @@ function CyberneticBrain() {
           <bufferGeometry>
             <bufferAttribute
               attach="attributes-position"
-              count={nodePositions.length / 3}
-              array={nodePositions}
-              itemSize={3}
+              args={[nodePositions, 3]}
             />
           </bufferGeometry>
           <pointsMaterial 
